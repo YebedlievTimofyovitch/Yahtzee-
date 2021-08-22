@@ -21,6 +21,7 @@ public class DiceRepetetion
 
 public class ScoreCounter : MonoBehaviour
 {
+    [SerializeField] private DiceCollector dice_Collector = null;
     private TypeOfScore finalScore = TypeOfScore.None;
     private bool has_FoundScore = false;
     private int[] diceValues = new int[5];
@@ -77,7 +78,7 @@ public class ScoreCounter : MonoBehaviour
         new int[] { 2 , 3 , 4 , 5 , 6 }
     };
 
-    private int[][] yahtzee =
+    private int[][] yahtzees =
     {
         new int[] {1, 1, 1, 1, 1},
         new int[] {2, 2, 2, 2, 2},
@@ -89,17 +90,17 @@ public class ScoreCounter : MonoBehaviour
     };
     #endregion
 
-    private void OnEnable()
+    public void ProduceResults()
     {
         has_FoundScore = false;
         repitition_Values = new List<int>();
         AssignAndArrangeArrayValues();
-        DetectRepititions();
+        DetectRepititions_AndProduceResults();
         DetectStraightsAndYahtzee();
         DisplayScore();
     }
 
-    private void OnDisable()
+    public void ResetScoreCounter()
     {
         foreach (DiceRepetetion dr in dice_Rep)
         {
@@ -109,10 +110,9 @@ public class ScoreCounter : MonoBehaviour
 
     private void AssignAndArrangeArrayValues()
     {
-        for (int i = 0; i < diceValues.Length; i++)
-        {
-            diceValues[i] = UnityEngine.Random.Range(1, 7);
-        }
+        
+        diceValues = dice_Collector.GetScoreCounterDice;
+        
         for (int x = 0; x < diceValues.Length; x++)
         {
             for (int y = 0; y < diceValues.Length; y++)
@@ -148,9 +148,9 @@ public class ScoreCounter : MonoBehaviour
                 return;
             }
         }
-        foreach(int[] yahtz in yahtzee)
+        foreach(int[] yahtzee in yahtzees)
         {
-            if(diceValues.SequenceEqual(yahtz))
+            if(diceValues.SequenceEqual(yahtzee))
             {
                 finalScore = TypeOfScore.Yahtzee;
                 has_FoundScore = true;
@@ -159,7 +159,7 @@ public class ScoreCounter : MonoBehaviour
         }
     }
 
-    private void DetectRepititions()
+    private void DetectRepititions_AndProduceResults()
     {
         for (int i = 0; i < diceValues.Length; i++)
         {

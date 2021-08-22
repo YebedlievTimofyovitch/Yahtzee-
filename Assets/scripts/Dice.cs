@@ -10,6 +10,7 @@ public class Dice : MonoBehaviour
     private int throwValue = 0;
     public int DiceThrowValue { get { return throwValue; } set { throwValue = value; } }
 
+    //Not sure what this is for see DiceCollector IsDiceInPosition()
     private bool is_InPosition = false;
     public bool IsInPosition { set { is_InPosition = value; } get { { return is_InPosition; } } }
 

@@ -13,6 +13,14 @@ public class DiceCollector : MonoBehaviour
     [SerializeField] private float move_ToPositionSpeed = 10.0f;
     #endregion
 
+    //planning on exapnding that?
+    #region Score Ccounter Variables
+    [SerializeField] private ScoreCounter score_Counter = null;
+    
+    private int[] score_Counter_DiceVals = new int[5] {0,0,0,0,0};
+    public int[] GetScoreCounterDice { get { return score_Counter_DiceVals; } }
+    #endregion
+
     #region Booleans
     private bool has_DiceStoppedMoving = false;
     public bool SetDiceStoppedMovingBool { set { has_DiceStoppedMoving = value; } }
@@ -70,20 +78,23 @@ public class DiceCollector : MonoBehaviour
     {
         foreach (Dice td in thrown_Dice)
         {
+            int scvIndex = 0;
             td.transform.parent = null;
             Rigidbody dieRB = td.GetComponent<Rigidbody>();
             dieRB.constraints = RigidbodyConstraints.FreezeRotation;
             Vector3 rayPosition = td.transform.position + ray_Position;
             RaycastHit hit = new RaycastHit();
-            Debug.DrawRay(rayPosition, Vector3.down*ray_Length, Color.red);
+            //Debug.DrawRay(rayPosition, Vector3.down*ray_Length, Color.red);
+
             if (Physics.Raycast(rayPosition , Vector3.down , out hit , ray_Length , die_FaceLayer))
             {
                 Face face = hit.collider.gameObject.GetComponent<Face>();
                 if (face != null)
                 {
-
                     Debug.DrawRay(rayPosition, Vector3.down * ray_Length, Color.red, 5f);
                     td.DiceThrowValue = face.GetFaceValue;
+                    score_Counter_DiceVals[scvIndex] = face.GetFaceValue;
+                    scvIndex++;
                 }
                 else
                 {
@@ -132,8 +143,12 @@ public class DiceCollector : MonoBehaviour
             }
             thrown_Dice[i].GetDiceRigidbody.transform.position = Vector3.Lerp(thrown_Dice[i].GetDiceRigidbody.transform.position, pos, move_ToPositionSpeed * Time.deltaTime);
         }
+
+        score_Counter.ProduceResults();
     }
 
+
+    //NOT USED I'VE BEEN AWAY FOR TOO LONG??
     private void IsDiceInPosition()
     {
         foreach(Dice die in thrown_Dice)

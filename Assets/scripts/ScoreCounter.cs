@@ -213,7 +213,8 @@ public class ScoreCounter : MonoBehaviour
     {
         if (!has_FoundScore)
             finalScore = TypeOfScore.Chance;
-
+        foreach(int i in diceValues)
+        print(i);
         print(finalScore);
     }
 }

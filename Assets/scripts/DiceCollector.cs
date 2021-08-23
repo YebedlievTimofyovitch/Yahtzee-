@@ -76,9 +76,9 @@ public class DiceCollector : MonoBehaviour
 
     private void AssignDiceValues()
     {
+        int scvIndex = 0;
         foreach (Dice td in thrown_Dice)
         {
-            int scvIndex = 0;
             td.transform.parent = null;
             Rigidbody dieRB = td.GetComponent<Rigidbody>();
             dieRB.constraints = RigidbodyConstraints.FreezeRotation;

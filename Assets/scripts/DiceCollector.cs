@@ -10,6 +10,7 @@ public class DiceCollector : MonoBehaviour
     #region The Dice and It's Position Values
     [SerializeField] private Dice[] thrown_Dice = new Dice[5] { null, null, null, null, null };
     [SerializeField] private Vector3[] dice_ArrangedPositions = new Vector3[5] { Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero, Vector3.zero };
+    [SerializeField] private float minimum_Distance = 0.1f;
     [SerializeField] private float move_ToPositionSpeed = 10.0f;
     #endregion
 
@@ -137,25 +138,33 @@ public class DiceCollector : MonoBehaviour
                 return;
             }
             Vector3 pos = dice_ArrangedPositions[i];
-            if (Vector3.Distance(thrown_Dice[i].GetDiceRigidbody.transform.position, pos) < 0.1f)
+            if (Vector3.Distance(thrown_Dice[i].GetDiceRigidbody.transform.position, pos) < minimum_Distance)
             {
-                return;
+                thrown_Dice[i].IsInPosition = true;
             }
-            thrown_Dice[i].GetDiceRigidbody.transform.position = Vector3.Lerp(thrown_Dice[i].GetDiceRigidbody.transform.position, pos, move_ToPositionSpeed * Time.deltaTime);
+            else
+            {
+                thrown_Dice[i].GetDiceRigidbody.transform.position = Vector3.Lerp(thrown_Dice[i].GetDiceRigidbody.transform.position, pos, move_ToPositionSpeed * Time.deltaTime);
+            }
         }
 
-        score_Counter.ProduceResults();
+        IsDiceInPosition();
+
+        
     }
 
 
     //NOT USED I'VE BEEN AWAY FOR TOO LONG??
     private void IsDiceInPosition()
     {
+        print("checking");
         foreach(Dice die in thrown_Dice)
         {
             if (!die.IsInPosition)
                 return;
         }
+        score_Counter.ProduceResults();
         has_FinishedAssigningAndArranging = true;
+        print("finished");
     }
 }
